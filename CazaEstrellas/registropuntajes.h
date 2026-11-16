@@ -56,6 +56,16 @@ public:
         );
 
     Q_INVOKABLE void eliminarHistorial();
+signals:
+    void cantidadChanged();
+
+private:
+    QList<Partida> partidas;
+
+    QString obtenerRuta() const;
+    void cargarPartidas();
+    void guardarPartidas() const;
 };
 
-#endif // REGISTROPUNTAJES_H
+
+#endif //Fin de registropuntajes.h
