@@ -4,87 +4,39 @@ import QtQuick.Layouts
 import QtMultimedia
 
 ApplicationWindow {
-    id: window
-    width: 640
-    height: 480
-    minimumWidth: 200
-    minimumHeight: 250
-    visible: true
-    title: qsTr("Hello World")
-    property bool lightMode: Application.styleHints.colorScheme === Qt.Light
-    property color reallyDark: "#1f1f1f"
-    property color dark: "#262626"
-    property color reallyLight: "#e7e7e7"
-    property color light: "#e0e0e0"
+    id: ventana
+     width: 390
+     height: 740
+     minimumWidth: 320
+     minimumHeight: 550
+     visible: true
+     title: "Órbita Fugaz"
+     color: "#101827"
 
-    GridLayout {
-        id: grid
-        columns: width < 400 ? 1 : 2
-        rowSpacing: 0
-        columnSpacing: 0
-        anchors.fill: parent
+     property int pantalla: 0
+     property string nombreJugador: ""
+     property string aliasJugador: ""
+     property int edadJugador: 0
+     property string dificultad: "Normal"
 
-        Rectangle {
-            id: rectangle1
-            color: window.lightMode ? window.reallyLight : window.reallyDark
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+     property int puntos: 0
+     property int tiempo: 30
+     property int combo: 0
+     property int mejorCombo: 0
+     property int estrellas: 0
+     property int meteoritos: 0
 
-            ColumnLayout {
-                anchors.fill: parent
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+     property bool jugando: false
+     property bool pausado: false
+     property bool partidaTerminada: false
+     property bool sonidoActivo: true
 
-                Label {
-                    id: text1
-                    color: window.lightMode ? window.dark : window.light
-                    font.pixelSize: 120
-                    fontSizeMode: Text.Fit
-                    text: qsTr("Hello World")
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.margins: 16
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                }
-            }
-        }
+     property int tipoObjetivo: 0
+     property int tamañoObjetivo: 65
+     property real posicionX: 0
+     property real posicionY: 0
+     property string avisoEtapa: ""
 
-        Rectangle {
-            id: rectangle2
-            color: window.lightMode ? window.light : window.dark
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-
-            ColumnLayout {
-                anchors.fill: parent
-                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
-
-                Button {
-                    id: button1
-                    text: window.lightMode ? qsTr("\u263D  Dark mode")
-                                           : qsTr("\u263C  Light mode")
-                    Layout.bottomMargin: 16
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
-
-                    contentItem: Text {
-                        text: button1.text
-                        color: window.lightMode ? window.light : window.dark
-                        font: button1.font
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                    }
-
-                    background: Rectangle {
-                        implicitWidth: 120
-                        implicitHeight: 36
-                        radius: 8
-                        color: window.lightMode ? window.dark : window.light
-                    }
-
-                    onClicked: window.lightMode = !window.lightMode
-                }
-            }
-        }
-    }
+     readonly property int etapa: tiempo > 20 ? 1 : tiempo > 10 ? 2 : 3
 
 }
