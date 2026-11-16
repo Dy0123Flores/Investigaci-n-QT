@@ -85,4 +85,74 @@ ApplicationWindow {
              musica.play()
     }
 
+     function tocarObjetivo() {
+            if (!jugando || pausado)
+                return
+
+            if (tipoObjetivo === 0) {
+                estrellas++
+                combo++
+
+                if (combo > mejorCombo)
+                    mejorCombo = combo
+
+                var ganancia = dificultad === "Difícil" ? 3 : 2
+
+                if (combo >= 5)
+                    ganancia += 3
+                else if (combo >= 3)
+                    ganancia += 1
+
+                puntos += ganancia
+
+                if (sonidoActivo)
+                    sonidoEstrella.play()
+            } else {
+                meteoritos++
+                combo = 0
+                puntos = Math.max(0, puntos - 3)
+
+                if (sonidoActivo)
+                    sonidoMeteorito.play()
+            }
+
+            cambiarObjetivo()
+        }
+
+        function cambiarPausa() {
+            if (!jugando)
+                return
+
+            pausado = !pausado
+
+            if (sonidoActivo) {
+                if (pausado)
+                    musica.pause()
+                else
+                    musica.play()
+            }
+        }
+
+        function terminarJuego() {
+            if (!jugando)
+                return
+
+            jugando = false
+            pausado = false
+            partidaTerminada = true
+
+            musica.stop()
+
+            registroPuntajes.agregarPartida(
+                nombreJugador,
+                aliasJugador,
+                edadJugador,
+                dificultad,
+                puntos
+            )
+
+            pantalla = 2
+        }
+
+
 }
