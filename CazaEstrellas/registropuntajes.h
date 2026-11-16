@@ -6,6 +6,17 @@
 #include <QList>
 #include <QString>
 
+struct Partida
+{
+    QString nombre;
+    QString alias;
+    int edad;
+    QString dificultad;
+    int puntos;
+    QString fecha;
+};
+
+
 class registropuntajes
 {
 public:
