@@ -17,8 +17,11 @@ struct Partida
 };
 
 
-class registropuntajes
+class RegistroPuntajes : public QAbstractListModel
 {
+    Q_OBJECT
+    Q_PROPERTY(int cantidad READ cantidad NOTIFY cantidadChanged)
+
 public:
     registropuntajes();
 };
