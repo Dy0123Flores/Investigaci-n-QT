@@ -46,6 +46,16 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     int cantidad() const;
+
+    Q_INVOKABLE void agregarPartida(
+        const QString &nombre,
+        const QString &alias,
+        int edad,
+        const QString &dificultad,
+        int puntos
+        );
+
+    Q_INVOKABLE void eliminarHistorial();
 };
 
 #endif // REGISTROPUNTAJES_H
