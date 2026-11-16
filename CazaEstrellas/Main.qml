@@ -201,6 +201,36 @@ ApplicationWindow {
                 volume: 0.5
             }
 
+            Timer {
+                   id: cronometro
+                   interval: 1000
+                   repeat: true
+                   running: ventana.jugando && !ventana.pausado
+
+                   onTriggered: {
+                       if (ventana.tiempo > 1) {
+                           ventana.tiempo--
+                       } else {
+                           ventana.tiempo = 0
+                           ventana.terminarJuego()
+                       }
+                   }
+               }
+
+               Timer {
+                   id: movimientoTimer
+                   interval: ventana.intervaloObjetivos
+                   repeat: true
+                   running: ventana.jugando && !ventana.pausado
+
+                   onTriggered: ventana.cambiarObjetivo()
+               }
+
+               Timer {
+                   id: avisoTimer
+                   interval: 1400
+                   onTriggered: ventana.avisoEtapa = ""
+               }
 
 
 }
