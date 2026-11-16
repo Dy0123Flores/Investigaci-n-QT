@@ -173,5 +173,34 @@ ApplicationWindow {
                 musica.play()
         }
 
+        MediaPlayer {
+                id: musica
+                source: Qt.resolvedUrl("audio/musica.wav")
+                loops: MediaPlayer.Infinite
+
+                audioOutput: AudioOutput {
+                    volume: 0.28
+                }
+            }
+
+            SoundEffect {
+                id: sonidoEstrella
+                source: Qt.resolvedUrl("audio/estrella.wav")
+                volume: 0.5
+            }
+
+            SoundEffect {
+                id: sonidoMeteorito
+                source: Qt.resolvedUrl("audio/meteorito.wav")
+                volume: 0.5
+            }
+
+            SoundEffect {
+                id: sonidoEtapa
+                source: Qt.resolvedUrl("audio/etapa.wav")
+                volume: 0.5
+            }
+
+
 
 }
