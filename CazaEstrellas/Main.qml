@@ -154,5 +154,24 @@ ApplicationWindow {
             pantalla = 2
         }
 
+        onEtapaChanged: {
+            if (jugando && etapa > 1) {
+                avisoEtapa = "ETAPA " + etapa + " - MÁS VELOCIDAD"
+                cambiarObjetivo()
+
+                if (sonidoActivo)
+                    sonidoEtapa.play()
+
+                avisoTimer.restart()
+            }
+        }
+
+        onSonidoActivoChanged: {
+            if (!sonidoActivo)
+                musica.stop()
+            else if (jugando && !pausado)
+                musica.play()
+        }
+
 
 }
