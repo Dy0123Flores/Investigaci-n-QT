@@ -38,5 +38,51 @@ ApplicationWindow {
      property string avisoEtapa: ""
 
      readonly property int etapa: tiempo > 20 ? 1 : tiempo > 10 ? 2 : 3
+     readonly property int intervaloObjetivos: {
+         if (dificultad === "Fácil")
+             return etapa === 1 ? 1800 : etapa === 2 ? 1300 : 900
+
+         if (dificultad === "Normal")
+             return etapa === 1 ? 1400 : etapa === 2 ? 950 : 600
+
+         return etapa === 1 ? 1050 : etapa === 2 ? 700 : 400
+     }
+
+     function cambiarObjetivo() {
+         tipoObjetivo = Math.random() < 0.25 ? 1 : 0
+
+         posicionX = Math.random() *
+                     Math.max(0, zonaJuego.width - tamañoObjetivo)
+
+         posicionY = Math.random() *
+                     Math.max(0, zonaJuego.height - tamañoObjetivo)
+     }
+
+     function iniciarJuego() {
+         puntos = 0
+         tiempo = 30
+         combo = 0
+         mejorCombo = 0
+         estrellas = 0
+         meteoritos = 0
+         pausado = false
+         partidaTerminada = false
+         avisoEtapa = ""
+
+         if (dificultad === "Fácil")
+             tamañoObjetivo = 85
+         else if (dificultad === "Normal")
+             tamañoObjetivo = 65
+         else
+             tamañoObjetivo = 48
+
+         pantalla = 1
+         jugando = true
+
+         Qt.callLater(cambiarObjetivo)
+
+         if (sonidoActivo)
+             musica.play()
+    }
 
 }
