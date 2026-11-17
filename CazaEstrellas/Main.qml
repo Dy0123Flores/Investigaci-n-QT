@@ -396,4 +396,178 @@ ApplicationWindow {
                       }
 
 
+                      Item {
+                                 ColumnLayout {
+                                     anchors.fill: parent
+                                     anchors.margins: 15
+                                     spacing: 10
+
+                                     Label {
+                                         text: "MISIÓN ESPACIAL"
+                                         color: "#78dce8"
+                                         font.pixelSize: 23
+                                         font.bold: true
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     Label {
+                                         text: aliasJugador + " · " + dificultad + " · Etapa " + etapa + "/3"
+                                         color: "#afc3dd"
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     RowLayout {
+                                         Layout.fillWidth: true
+
+                                         Label {
+                                             text: "Puntos: " + puntos
+                                             color: "#ffd166"
+                                             font.pixelSize: 18
+                                             font.bold: true
+                                             Layout.fillWidth: true
+                                         }
+
+                                         Label {
+                                             text: tiempo + " s"
+                                             color: tiempo <= 5 ? "#ff7474" : "white"
+                                             font.pixelSize: 18
+                                             font.bold: true
+                                         }
+                                     }
+
+                                     ProgressBar {
+                                         Layout.fillWidth: true
+                                         from: 0
+                                         to: 30
+                                         value: tiempo
+                                     }
+
+                                     RowLayout {
+                                         Layout.fillWidth: true
+
+                                         Label {
+                                             text: "Estrellas: " + estrellas
+                                             color: "#ffd166"
+                                             Layout.fillWidth: true
+                                         }
+
+                                         Label {
+                                             text: "Combo: x" + combo
+                                             color: "#78dce8"
+                                             font.bold: true
+                                         }
+                                     }
+
+                                     Label {
+                                         text: "Velocidad: " + intervaloObjetivos + " ms"
+                                         color: "#b6c6dd"
+                                         font.pixelSize: 12
+                                     }
+
+                                     Rectangle {
+                                         id: zonaJuego
+                                         Layout.fillWidth: true
+                                         Layout.fillHeight: true
+                                         radius: 15
+                                         color: "#1c2b45"
+                                         border.color: "#365074"
+                                         clip: true
+
+                                         Repeater {
+                                             model: 18
+
+                                             Rectangle {
+                                                 required property int index
+
+                                                 width: 2 + index % 3
+                                                 height: width
+                                                 radius: width / 2
+                                                 color: "#adc6ec"
+                                                 opacity: 0.5
+
+                                                 x: ((index * 37) % 97) / 100 * zonaJuego.width
+                                                 y: ((index * 53) % 93) / 100 * zonaJuego.height
+                                             }
+                                         }
+
+                                         Rectangle {
+                                             id: objetivo
+                                             width: ventana.tamañoObjetivo
+                                             height: width
+                                             radius: width / 2
+                                             x: ventana.posicionX
+                                             y: ventana.posicionY
+                                             visible: ventana.jugando && !ventana.pausado
+
+                                             color: ventana.tipoObjetivo === 0 ? "#ffd166" : "#e85d6b"
+                                             border.color: ventana.tipoObjetivo === 0 ? "#fff0af" : "#ff9ba4"
+                                             border.width: 3
+
+                                             Label {
+                                                 anchors.centerIn: parent
+                                                 text: ventana.tipoObjetivo === 0 ? "★" : "☄"
+                                                 color: "#19253d"
+                                                 font.pixelSize: objetivo.width * 0.6
+                                             }
+
+                                             TapHandler {
+                                                 onTapped: ventana.tocarObjetivo()
+                                             }
+                                         }
+
+                                         Label {
+                                             anchors.horizontalCenter: parent.horizontalCenter
+                                             anchors.top: parent.top
+                                             anchors.topMargin: 18
+
+                                             text: ventana.avisoEtapa
+                                             visible: ventana.avisoEtapa.length > 0 && !ventana.pausado
+                                             color: "#ffd166"
+                                             font.pixelSize: 16
+                                             font.bold: true
+                                         }
+
+                                         Rectangle {
+                                             anchors.fill: parent
+                                             visible: ventana.pausado
+                                             color: "#dd101827"
+                                             radius: 15
+
+                                             Column {
+                                                 anchors.centerIn: parent
+                                                 spacing: 10
+
+                                                 Label {
+                                                     text: "JUEGO EN PAUSA"
+                                                     color: "white"
+                                                     font.pixelSize: 20
+                                                     font.bold: true
+                                                 }
+
+                                                 Button {
+                                                     text: "CONTINUAR"
+                                                     anchors.horizontalCenter: parent.horizontalCenter
+                                                     onClicked: ventana.cambiarPausa()
+                                                 }
+                                             }
+                                         }
+                                     }
+
+                                     RowLayout {
+                                         Layout.fillWidth: true
+
+                                         Button {
+                                             text: ventana.pausado ? "CONTINUAR" : "PAUSAR"
+                                             Layout.fillWidth: true
+                                             onClicked: ventana.cambiarPausa()
+                                         }
+
+                                         Button {
+                                             text: "TERMINAR"
+                                             Layout.fillWidth: true
+                                             onClicked: ventana.terminarJuego()
+                                         }
+                                     }
+                                 }
+                             }
 }
