@@ -232,42 +232,25 @@ ApplicationWindow {
                    onTriggered: ventana.avisoEtapa = ""
                }
 
-               StackLayout {
-                       anchors.fill: parent
-                       currentIndex: ventana.pantalla
+               Layout.alignment: Qt.AlignHCenter
+           }
 
-                       Item {
-                           ColumnLayout {
-                               anchors.fill: parent
-                               anchors.margins: 20
-                               spacing: 9
+           Label {
+               text: "ÓRBITA FUGAZ"
+               color: "white"
+               font.pixelSize: 27
+               font.bold: true
+               Layout.alignment: Qt.AlignHCenter
+           }
 
-                               Item {
-                                   Layout.fillHeight: true
-                               }
+           Label {
+               text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
+               color: "#a9bdd8"
+               wrapMode: Text.WordWrap
+               horizontalAlignment: Text.AlignHCenter
+               Layout.fillWidth: true
+           }
 
-                               Label {
-                                   text: "★"
-                                   color: "#ffd166"
-                                   font.pixelSize: 70
-                                   Layout.alignment: Qt.AlignHCenter
-                               }
-
-                               Label {
-                                   text: "ÓRBITA FUGAZ"
-                                   color: "white"
-                                   font.pixelSize: 27
-                                   font.bold: true
-                                   Layout.alignment: Qt.AlignHCenter
-                               }
-
-                               Label {
-                                   text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
-                                   color: "#a9bdd8"
-                                   wrapMode: Text.WordWrap
-                                   horizontalAlignment: Text.AlignHCenter
-                                   Layout.fillWidth: true
-                               }
 
 
 }
