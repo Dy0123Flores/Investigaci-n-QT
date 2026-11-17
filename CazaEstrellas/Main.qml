@@ -10,7 +10,7 @@ ApplicationWindow {
     minimumWidth: 320
     minimumHeight: 550
     visible: true
-    title: "Órbita Fugaz"
+    title: "Caza de Estrellas"
     color: "#101827"
 
     property int pantalla: 0
@@ -255,7 +255,7 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: "ÓRBITA FUGAZ"
+                    text: "Caza Estelar"
                     color: "white"
                     font.pixelSize: 27
                     font.bold: true
@@ -263,7 +263,7 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
+                    text: "Atrapa las estrellas, esquiva meteoritos y supera las tres etapas de cada nivel"
                     color: "#a9bdd8"
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignHCenter
@@ -290,7 +290,7 @@ ApplicationWindow {
                 TextField {
                     id: campoAlias
                     Layout.fillWidth: true
-                    placeholderText: "Nombre para los resultados"
+                    placeholderText: "Nombre de consulta"
                     maximumLength: 20
                 }
 
@@ -447,7 +447,7 @@ ApplicationWindow {
                     Layout.fillWidth: true
 
                     Label {
-                        text: "Estrellas: " + estrellas
+                        text: "Estrellas recolectadas: " + estrellas
                         color: "#ffd166"
                         Layout.fillWidth: true
                     }
