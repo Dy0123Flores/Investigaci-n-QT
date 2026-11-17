@@ -231,26 +231,169 @@ ApplicationWindow {
                    interval: 1400
                    onTriggered: ventana.avisoEtapa = ""
                }
+               StackLayout {
+                      anchors.fill: parent
+                      currentIndex: ventana.pantalla
 
-               Layout.alignment: Qt.AlignHCenter
-           }
+                      Item {
+                          ColumnLayout {
+                              anchors.fill: parent
+                              anchors.margins: 20
+                              spacing: 9
 
-           Label {
-               text: "ÓRBITA FUGAZ"
-               color: "white"
-               font.pixelSize: 27
-               font.bold: true
-               Layout.alignment: Qt.AlignHCenter
-           }
+                              Item {
+                                  Layout.fillHeight: true
+                              }
 
-           Label {
-               text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
-               color: "#a9bdd8"
-               wrapMode: Text.WordWrap
-               horizontalAlignment: Text.AlignHCenter
-               Layout.fillWidth: true
-           }
+                              Label {
+                                  text: "★"
+                                  color: "#ffd166"
+                                  font.pixelSize: 70
+                                  Layout.alignment: Qt.AlignHCenter
+                              }
 
+                              Label {
+                                  text: "ÓRBITA FUGAZ"
+                                  color: "white"
+                                  font.pixelSize: 27
+                                  font.bold: true
+                                  Layout.alignment: Qt.AlignHCenter
+                              }
+
+                              Label {
+                                  text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
+                                  color: "#a9bdd8"
+                                  wrapMode: Text.WordWrap
+                                  horizontalAlignment: Text.AlignHCenter
+                                  Layout.fillWidth: true
+                              }
+
+                              Label {
+                                  text: "Nombre"
+                                  color: "white"
+                              }
+
+                              TextField {
+                                  id: campoNombre
+                                  Layout.fillWidth: true
+                                  placeholderText: "Nombre del jugador"
+                                  maximumLength: 35
+                              }
+
+                              Label {
+                                  text: "Alias"
+                                  color: "white"
+                              }
+
+                              TextField {
+                                  id: campoAlias
+                                  Layout.fillWidth: true
+                                  placeholderText: "Nombre para los resultados"
+                                  maximumLength: 20
+                              }
+
+                              Label {
+                                  text: "Edad"
+                                  color: "white"
+                              }
+
+                              TextField {
+                                  id: campoEdad
+                                  Layout.fillWidth: true
+                                  placeholderText: "Edad"
+                                  maximumLength: 3
+                                  inputMethodHints: Qt.ImhDigitsOnly
+
+                                  validator: IntValidator {
+                                      bottom: 1
+                                      top: 999
+                                  }
+                              }
+
+                              Label {
+                                  text: "Dificultad"
+                                  color: "white"
+                              }
+
+                              ComboBox {
+                                  id: campoDificultad
+                                  Layout.fillWidth: true
+                                  model: ["Fácil", "Normal", "Difícil"]
+                                  currentIndex: 1
+                              }
+
+                              CheckBox {
+                                  text: "Activar música y efectos"
+                                  checked: ventana.sonidoActivo
+                                  onToggled: ventana.sonidoActivo = checked
+                              }
+
+                              Label {
+                                  id: mensaje
+                                  text: ""
+                                  color: "#ff8989"
+                                  visible: text.length > 0
+                                  Layout.fillWidth: true
+                                  wrapMode: Text.WordWrap
+                              }
+
+                              Button {
+                                  text: "COMENZAR MISIÓN"
+                                  Layout.fillWidth: true
+                                  highlighted: true
+
+                                  onClicked: {
+                                      var nombre = campoNombre.text.trim()
+                                      var alias = campoAlias.text.trim()
+                                      var edad = Number(campoEdad.text)
+
+                                      if (nombre.length < 2) {
+                                          mensaje.text = "Ingresa un nombre válido."
+                                          return
+                                      }
+
+                                      if (alias.length < 2) {
+                                          mensaje.text = "Ingresa un alias válido."
+                                          return
+                                      }
+
+                                      if (campoEdad.text.trim() === "" ||
+                                          !Number.isInteger(edad) ||
+                                          edad < 5 || edad > 100) {
+                                          mensaje.text = "La edad debe estar entre 5 y 100."
+                                          return
+                                      }
+
+                                      nombreJugador = nombre
+                                      aliasJugador = alias
+                                      edadJugador = edad
+                                      dificultad = campoDificultad.currentText
+                                      mensaje.text = ""
+
+                                      campoNombre.focus = false
+                                      campoAlias.focus = false
+                                      campoEdad.focus = false
+
+                                      iniciarJuego()
+                                  }
+                              }
+
+                              Button {
+                                  text: "VER HISTORIAL"
+                                  flat: true
+                                  Layout.fillWidth: true
+
+                                  onClicked: {
+                                      partidaTerminada = false
+                                      pantalla = 2
+                                  }
+                              }
+
+                              Item {
+                                  Layout.fillHeight: true
+                              }
+                          }
+                      }
 
 
 }
