@@ -570,4 +570,158 @@ ApplicationWindow {
                                      }
                                  }
                              }
+
+                      Item {
+                                 ColumnLayout {
+                                     anchors.fill: parent
+                                     anchors.margins: 18
+                                     spacing: 12
+
+                                     Label {
+                                         text: "RESULTADOS"
+                                         color: "#78dce8"
+                                         font.pixelSize: 27
+                                         font.bold: true
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     Label {
+                                         text: "Historial de partidas"
+                                         color: "#a9bdd8"
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     Label {
+                                         text: "Último puntaje: " + ventana.puntos
+                                         color: "#ffd166"
+                                         font.pixelSize: 20
+                                         visible: ventana.partidaTerminada
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     Label {
+                                         text: "Mejor combo: " + ventana.mejorCombo
+                                         color: "#78dce8"
+                                         visible: ventana.partidaTerminada
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     Label {
+                                         text: "No hay partidas registradas."
+                                         color: "#a9bdd8"
+                                         visible: registroPuntajes.cantidad === 0
+                                         Layout.alignment: Qt.AlignHCenter
+                                     }
+
+                                     ListView {
+                                         id: lista
+                                         Layout.fillWidth: true
+                                         Layout.fillHeight: true
+                                         clip: true
+                                         spacing: 8
+                                         model: registroPuntajes
+
+                                         delegate: Rectangle {
+                                             required property string nombre
+                                             required property string alias
+                                             required property int edad
+                                             required property string dificultad
+                                             required property int puntos
+                                             required property string fecha
+
+                                             width: lista.width
+                                             height: 90
+                                             radius: 12
+                                             color: "#20324e"
+                                             border.color: "#3a5274"
+
+                                             ColumnLayout {
+                                                 anchors.fill: parent
+                                                 anchors.margins: 10
+                                                 spacing: 4
+
+                                                 RowLayout {
+                                                     Layout.fillWidth: true
+
+                                                     Label {
+                                                         text: alias
+                                                         color: "white"
+                                                         font.bold: true
+                                                         font.pixelSize: 17
+                                                         Layout.fillWidth: true
+                                                         elide: Text.ElideRight
+                                                     }
+
+                                                     Label {
+                                                         text: puntos + " pts"
+                                                         color: "#ffd166"
+                                                         font.bold: true
+                                                     }
+                                                 }
+
+                                                 Label {
+                                                     text: nombre + " - " + dificultad + " - " + edad + " años"
+                                                     color: "#bdcee4"
+                                                     font.pixelSize: 12
+                                                     Layout.fillWidth: true
+                                                     elide: Text.ElideRight
+                                                 }
+
+                                                 Label {
+                                                     text: fecha
+                                                     color: "#94aac7"
+                                                     font.pixelSize: 11
+                                                 }
+                                             }
+                                         }
+                                     }
+
+                                     Button {
+                                         text: "JUGAR NUEVAMENTE"
+                                         highlighted: true
+                                         Layout.fillWidth: true
+
+                                         onClicked: {
+                                             if (ventana.nombreJugador.length > 0)
+                                                 ventana.iniciarJuego()
+                                             else
+                                                 ventana.pantalla = 0
+                                         }
+                                     }
+
+                                     Button {
+                                         text: "VOLVER AL INICIO"
+                                         Layout.fillWidth: true
+
+                                         onClicked: {
+                                             ventana.partidaTerminada = false
+                                             ventana.pantalla = 0
+                                         }
+                                     }
+
+                                     Button {
+                                         text: "BORRAR HISTORIAL"
+                                         flat: true
+                                         Layout.fillWidth: true
+                                         enabled: registroPuntajes.cantidad > 0
+                                         onClicked: confirmarBorrado.open()
+                                     }
+                                 }
+                             }
+                         }
+
+                         Dialog {
+                             id: confirmarBorrado
+                             title: "Borrar historial"
+                             modal: true
+                             anchors.centerIn: parent
+                             standardButtons: Dialog.Yes | Dialog.No
+
+                             onAccepted: registroPuntajes.eliminarHistorial()
+
+                             Label {
+                                 text: "¿Deseas eliminar todas las partidas?"
+                                 wrapMode: Text.WordWrap
+                             }
+                         }
 }
