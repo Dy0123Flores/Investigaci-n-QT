@@ -284,7 +284,7 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: "CAZA ESTRELLAS"
+                    text: "CAZA ESTELAR"
                     color: "white"
                     font.pixelSize: 27
                     font.bold: true
@@ -292,7 +292,7 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
+                    text: "Atrapa las estrellas, esquiva meteoritos y supera las tres etapas"
                     color: "#a9bdd8"
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignHCenter
@@ -321,7 +321,7 @@ ApplicationWindow {
                 TextField {
                     id: campoAlias
                     Layout.fillWidth: true
-                    placeholderText: "Nombre para los resultados"
+                    placeholderText: "Nombre para indentificarse"
                     maximumLength: 20
                 }
 
@@ -377,7 +377,7 @@ ApplicationWindow {
 
                 // Valida los datos antes de comenzar la partida
                 Button {
-                    text: "COMENZAR MISIÓN"
+                    text: "COMENZAR JUEGO"
                     Layout.fillWidth: true
                     highlighted: true
 
@@ -588,14 +588,14 @@ ApplicationWindow {
                             spacing: 10
 
                             Label {
-                                text: "JUEGO EN PAUSA"
+                                text: "JUEGO DETENIDO"
                                 color: "white"
                                 font.pixelSize: 20
                                 font.bold: true
                             }
 
                             Button {
-                                text: "CONTINUAR"
+                                text: "CONTINUAR PARTIDA"
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 onClicked: ventana.cambiarPausa()
                             }
@@ -758,7 +758,7 @@ ApplicationWindow {
 
                 // Abre la confirmacion para borrar las partidas
                 Button {
-                    text: "BORRAR HISTORIAL"
+                    text: "BORRAR HISTORIAL DE PARTIDAS"
                     flat: true
                     Layout.fillWidth: true
                     enabled: registroPuntajes.cantidad > 0
