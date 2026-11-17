@@ -1,3 +1,4 @@
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -10,15 +11,17 @@ ApplicationWindow {
     minimumWidth: 320
     minimumHeight: 550
     visible: true
-    title: "Caza de Estrellas"
+    title: "CazaEstrellas"
     color: "#101827"
 
+    // Datos del jugador
     property int pantalla: 0
     property string nombreJugador: ""
     property string aliasJugador: ""
     property int edadJugador: 0
     property string dificultad: "Normal"
 
+    // Variables que controlan la partida
     property int puntos: 0
     property int tiempo: 30
     property int combo: 0
@@ -26,19 +29,23 @@ ApplicationWindow {
     property int estrellas: 0
     property int meteoritos: 0
 
+    // Estados del videojuego
     property bool jugando: false
     property bool pausado: false
     property bool partidaTerminada: false
     property bool sonidoActivo: true
 
+    // Propiedades de las estrellas y meteoritos
     property int tipoObjetivo: 0
     property int tamañoObjetivo: 65
     property real posicionX: 0
     property real posicionY: 0
     property string avisoEtapa: ""
 
+    // Divide la partida en tres etapas de 10 segundos
     readonly property int etapa: tiempo > 20 ? 1 : tiempo > 10 ? 2 : 3
 
+    // Define la velocidad segun la dificultad y la etapa
     readonly property int intervaloObjetivos: {
         if (dificultad === "Fácil")
             return etapa === 1 ? 1800 : etapa === 2 ? 1300 : 900
@@ -49,6 +56,7 @@ ApplicationWindow {
         return etapa === 1 ? 1050 : etapa === 2 ? 700 : 400
     }
 
+    // Cambia el objetivo y lo coloca en una posicion aleatoria
     function cambiarObjetivo() {
         tipoObjetivo = Math.random() < 0.25 ? 1 : 0
 
@@ -59,6 +67,7 @@ ApplicationWindow {
                     Math.max(0, zonaJuego.height - tamañoObjetivo)
     }
 
+    // Prepara los valores para comenzar una nueva partida
     function iniciarJuego() {
         puntos = 0
         tiempo = 30
@@ -70,6 +79,7 @@ ApplicationWindow {
         partidaTerminada = false
         avisoEtapa = ""
 
+        // Cambia el tamaño segun la dificultad
         if (dificultad === "Fácil")
             tamañoObjetivo = 85
         else if (dificultad === "Normal")
@@ -82,10 +92,12 @@ ApplicationWindow {
 
         Qt.callLater(cambiarObjetivo)
 
+        // Inicia la musica si esta activada
         if (sonidoActivo)
             musica.play()
     }
 
+    // Calcula los puntos cuando se toca un objetivo
     function tocarObjetivo() {
         if (!jugando || pausado)
             return
@@ -99,6 +111,7 @@ ApplicationWindow {
 
             var ganancia = dificultad === "Difícil" ? 3 : 2
 
+            // Agrega puntos adicionales por combos
             if (combo >= 5)
                 ganancia += 3
             else if (combo >= 3)
@@ -109,6 +122,7 @@ ApplicationWindow {
             if (sonidoActivo)
                 sonidoEstrella.play()
         } else {
+            // Los meteoritos descuentan puntos y reinician el combo
             meteoritos++
             combo = 0
             puntos = Math.max(0, puntos - 3)
@@ -120,6 +134,7 @@ ApplicationWindow {
         cambiarObjetivo()
     }
 
+    // Pausa o continua el tiempo y la musica
     function cambiarPausa() {
         if (!jugando)
             return
@@ -134,6 +149,7 @@ ApplicationWindow {
         }
     }
 
+    // Termina la partida y guarda la puntuacion
     function terminarJuego() {
         if (!jugando)
             return
@@ -155,9 +171,11 @@ ApplicationWindow {
         pantalla = 2
     }
 
+    // Muestra un aviso cuando aumenta la velocidad
     onEtapaChanged: {
         if (jugando && etapa > 1) {
             avisoEtapa = "ETAPA " + etapa + " - MÁS VELOCIDAD"
+
             cambiarObjetivo()
 
             if (sonidoActivo)
@@ -167,6 +185,7 @@ ApplicationWindow {
         }
     }
 
+    // Activa o desactiva la musica del juego
     onSonidoActivoChanged: {
         if (!sonidoActivo)
             musica.stop()
@@ -174,6 +193,7 @@ ApplicationWindow {
             musica.play()
     }
 
+    // Reproduce la musica de fondo
     MediaPlayer {
         id: musica
         source: Qt.resolvedUrl("audio/musica.wav")
@@ -184,24 +204,28 @@ ApplicationWindow {
         }
     }
 
+    // Sonido cuando se consigue una estrella
     SoundEffect {
         id: sonidoEstrella
         source: Qt.resolvedUrl("audio/estrella.wav")
         volume: 0.5
     }
 
+    // Sonido cuando se toca un meteorito
     SoundEffect {
         id: sonidoMeteorito
         source: Qt.resolvedUrl("audio/meteorito.wav")
         volume: 0.5
     }
 
+    // Sonido cuando comienza una nueva etapa
     SoundEffect {
         id: sonidoEtapa
         source: Qt.resolvedUrl("audio/etapa.wav")
         volume: 0.5
     }
 
+    // Descuenta un segundo mientras se esta jugando
     Timer {
         id: cronometro
         interval: 1000
@@ -218,6 +242,7 @@ ApplicationWindow {
         }
     }
 
+    // Controla cada cuanto cambia de posicion el objetivo
     Timer {
         id: movimientoTimer
         interval: ventana.intervaloObjetivos
@@ -227,16 +252,20 @@ ApplicationWindow {
         onTriggered: ventana.cambiarObjetivo()
     }
 
+    // Oculta el aviso de etapa despues de unos segundos
     Timer {
         id: avisoTimer
         interval: 1400
+
         onTriggered: ventana.avisoEtapa = ""
     }
 
+    // Permite cambiar entre las tres pantallas
     StackLayout {
         anchors.fill: parent
         currentIndex: ventana.pantalla
 
+        // Primera pantalla: registro del jugador
         Item {
             ColumnLayout {
                 anchors.fill: parent
@@ -255,7 +284,7 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: "Caza Estelar"
+                    text: "CAZA ESTRELLAS"
                     color: "white"
                     font.pixelSize: 27
                     font.bold: true
@@ -263,13 +292,14 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: "Atrapa las estrellas, esquiva meteoritos y supera las tres etapas de cada nivel"
+                    text: "Atrapa estrellas, esquiva meteoritos y supera las tres etapas"
                     color: "#a9bdd8"
                     wrapMode: Text.WordWrap
                     horizontalAlignment: Text.AlignHCenter
                     Layout.fillWidth: true
                 }
 
+                // Campo para registrar el nombre
                 Label {
                     text: "Nombre"
                     color: "white"
@@ -282,6 +312,7 @@ ApplicationWindow {
                     maximumLength: 35
                 }
 
+                // Campo para registrar el alias
                 Label {
                     text: "Alias"
                     color: "white"
@@ -290,10 +321,11 @@ ApplicationWindow {
                 TextField {
                     id: campoAlias
                     Layout.fillWidth: true
-                    placeholderText: "Nombre de consulta"
+                    placeholderText: "Nombre para los resultados"
                     maximumLength: 20
                 }
 
+                // Campo para registrar la edad
                 Label {
                     text: "Edad"
                     color: "white"
@@ -312,6 +344,7 @@ ApplicationWindow {
                     }
                 }
 
+                // Permite seleccionar la dificultad
                 Label {
                     text: "Dificultad"
                     color: "white"
@@ -324,12 +357,15 @@ ApplicationWindow {
                     currentIndex: 1
                 }
 
+                // Permite activar o desactivar los sonidos
                 CheckBox {
                     text: "Activar música y efectos"
                     checked: ventana.sonidoActivo
+
                     onToggled: ventana.sonidoActivo = checked
                 }
 
+                // Muestra los mensajes de validacion
                 Label {
                     id: mensaje
                     text: ""
@@ -339,6 +375,7 @@ ApplicationWindow {
                     wrapMode: Text.WordWrap
                 }
 
+                // Valida los datos antes de comenzar la partida
                 Button {
                     text: "COMENZAR MISIÓN"
                     Layout.fillWidth: true
@@ -370,6 +407,7 @@ ApplicationWindow {
                         aliasJugador = alias
                         edadJugador = edad
                         dificultad = campoDificultad.currentText
+
                         mensaje.text = ""
 
                         campoNombre.focus = false
@@ -380,6 +418,7 @@ ApplicationWindow {
                     }
                 }
 
+                // Abre el historial sin iniciar una partida
                 Button {
                     text: "VER HISTORIAL"
                     flat: true
@@ -397,6 +436,7 @@ ApplicationWindow {
             }
         }
 
+        // Segunda pantalla: desarrollo de la partida
         Item {
             ColumnLayout {
                 anchors.fill: parent
@@ -417,6 +457,7 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignHCenter
                 }
 
+                // Muestra los puntos y el tiempo restante
                 RowLayout {
                     Layout.fillWidth: true
 
@@ -436,6 +477,7 @@ ApplicationWindow {
                     }
                 }
 
+                // Barra que muestra el tiempo de la partida
                 ProgressBar {
                     Layout.fillWidth: true
                     from: 0
@@ -443,11 +485,12 @@ ApplicationWindow {
                     value: tiempo
                 }
 
+                // Muestra las estrellas y combos conseguidos
                 RowLayout {
                     Layout.fillWidth: true
 
                     Label {
-                        text: "Estrellas recolectadas: " + estrellas
+                        text: "Estrellas: " + estrellas
                         color: "#ffd166"
                         Layout.fillWidth: true
                     }
@@ -465,6 +508,7 @@ ApplicationWindow {
                     font.pixelSize: 12
                 }
 
+                // Area donde aparecen las estrellas y meteoritos
                 Rectangle {
                     id: zonaJuego
                     Layout.fillWidth: true
@@ -474,6 +518,7 @@ ApplicationWindow {
                     border.color: "#365074"
                     clip: true
 
+                    // Crea pequeñas estrellas decorativas
                     Repeater {
                         model: 18
 
@@ -491,6 +536,7 @@ ApplicationWindow {
                         }
                     }
 
+                    // Objetivo que debe tocar el jugador
                     Rectangle {
                         id: objetivo
                         width: ventana.tamañoObjetivo
@@ -511,11 +557,13 @@ ApplicationWindow {
                             font.pixelSize: objetivo.width * 0.6
                         }
 
+                        // Detecta cuando el jugador toca el objetivo
                         TapHandler {
                             onTapped: ventana.tocarObjetivo()
                         }
                     }
 
+                    // Muestra el mensaje al aumentar la velocidad
                     Label {
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.top: parent.top
@@ -528,6 +576,7 @@ ApplicationWindow {
                         font.bold: true
                     }
 
+                    // Pantalla que aparece cuando el juego esta pausado
                     Rectangle {
                         anchors.fill: parent
                         visible: ventana.pausado
@@ -554,6 +603,7 @@ ApplicationWindow {
                     }
                 }
 
+                // Botones para controlar la partida
                 RowLayout {
                     Layout.fillWidth: true
 
@@ -572,6 +622,7 @@ ApplicationWindow {
             }
         }
 
+        // Tercera pantalla: resultados e historial
         Item {
             ColumnLayout {
                 anchors.fill: parent
@@ -592,6 +643,7 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignHCenter
                 }
 
+                // Muestra los resultados de la ultima partida
                 Label {
                     text: "Último puntaje: " + ventana.puntos
                     color: "#ffd166"
@@ -614,6 +666,7 @@ ApplicationWindow {
                     Layout.alignment: Qt.AlignHCenter
                 }
 
+                // Muestra las partidas guardadas en forma de lista
                 ListView {
                     id: lista
                     Layout.fillWidth: true
@@ -622,6 +675,7 @@ ApplicationWindow {
                     spacing: 8
                     model: registroPuntajes
 
+                    // Define como se muestra cada partida
                     delegate: Rectangle {
                         required property string nombre
                         required property string alias
@@ -677,6 +731,7 @@ ApplicationWindow {
                     }
                 }
 
+                // Permite comenzar otra partida
                 Button {
                     text: "JUGAR NUEVAMENTE"
                     highlighted: true
@@ -690,6 +745,7 @@ ApplicationWindow {
                     }
                 }
 
+                // Regresa a la pantalla de registro
                 Button {
                     text: "VOLVER AL INICIO"
                     Layout.fillWidth: true
@@ -700,17 +756,20 @@ ApplicationWindow {
                     }
                 }
 
+                // Abre la confirmacion para borrar las partidas
                 Button {
                     text: "BORRAR HISTORIAL"
                     flat: true
                     Layout.fillWidth: true
                     enabled: registroPuntajes.cantidad > 0
+
                     onClicked: confirmarBorrado.open()
                 }
             }
         }
     }
 
+    // Pide confirmacion antes de eliminar el historial
     Dialog {
         id: confirmarBorrado
         title: "Borrar historial"
