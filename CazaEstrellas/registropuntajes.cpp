@@ -1,3 +1,4 @@
+
 #include "registropuntajes.h"
 #include <QDateTime>
 #include <QDir>
@@ -9,12 +10,14 @@
 #include <QSaveFile>
 #include <QStandardPaths>
 
+// Constructor que carga las partidas guardadas
 RegistroPuntajes::RegistroPuntajes(QObject *padre)
     : QAbstractListModel(padre)
 {
     cargarPartidas();
 }
 
+// Devuelve la cantidad de partidas de la lista
 int RegistroPuntajes::rowCount(
     const QModelIndex &padre
     ) const
@@ -25,6 +28,7 @@ int RegistroPuntajes::rowCount(
     return partidas.size();
 }
 
+// Obtiene la informacion de una partida segun el campo
 QVariant RegistroPuntajes::data(
     const QModelIndex &indice,
     int campo
@@ -40,21 +44,28 @@ QVariant RegistroPuntajes::data(
     switch (campo) {
     case Nombre:
         return partida.nombre;
+
     case Alias:
         return partida.alias;
+
     case Edad:
         return partida.edad;
+
     case Dificultad:
         return partida.dificultad;
+
     case Puntos:
         return partida.puntos;
+
     case Fecha:
         return partida.fecha;
+
     default:
         return {};
     }
 }
 
+// Define los nombres que QML utiliza para leer los datos
 QHash<int, QByteArray> RegistroPuntajes::roleNames() const
 {
     return {
@@ -67,11 +78,13 @@ QHash<int, QByteArray> RegistroPuntajes::roleNames() const
     };
 }
 
+// Devuelve la cantidad total de partidas
 int RegistroPuntajes::cantidad() const
 {
     return partidas.size();
 }
 
+// Registra una nueva partida con sus datos y puntuacion
 void RegistroPuntajes::agregarPartida(
     const QString &nombre,
     const QString &alias,
@@ -80,9 +93,11 @@ void RegistroPuntajes::agregarPartida(
     int puntos
     )
 {
+    // Comprueba que los datos sean validos
     if (nombre.trimmed().size() < 2 ||
         alias.trimmed().size() < 2 ||
-        edad < 5 || edad > 100 ||
+        edad < 5 ||
+        edad > 100 ||
         puntos < 0)
         return;
 
@@ -93,26 +108,35 @@ void RegistroPuntajes::agregarPartida(
     partida.edad = edad;
     partida.dificultad = dificultad;
     partida.puntos = puntos;
+
+    // Guarda la fecha en que se realizo la partida
     partida.fecha = QDateTime::currentDateTime().toString(
         "dd/MM/yyyy hh:mm"
         );
 
+    // Agrega la partida al inicio del historial
     beginInsertRows(QModelIndex(), 0, 0);
+
     partidas.prepend(partida);
+
     endInsertRows();
 
     emit cantidadChanged();
 
+    // Guarda los cambios en el archivo
     guardarPartidas();
 }
 
+// Elimina todas las partidas del historial
 void RegistroPuntajes::eliminarHistorial()
 {
     if (partidas.isEmpty())
         return;
 
     beginResetModel();
+
     partidas.clear();
+
     endResetModel();
 
     emit cantidadChanged();
@@ -120,6 +144,7 @@ void RegistroPuntajes::eliminarHistorial()
     guardarPartidas();
 }
 
+// Obtiene la ubicacion donde se guardan las partidas
 QString RegistroPuntajes::obtenerRuta() const
 {
     return QStandardPaths::writableLocation(
@@ -127,14 +152,18 @@ QString RegistroPuntajes::obtenerRuta() const
                ) + "/partidas.json";
 }
 
+// Carga las partidas que se guardaron anteriormente
 void RegistroPuntajes::cargarPartidas()
 {
     QFile archivo(obtenerRuta());
 
+    // Comprueba que el archivo se pueda abrir
     if (!archivo.open(QIODevice::ReadOnly))
         return;
 
     QJsonParseError error;
+
+    // Convierte el contenido del archivo a JSON
     QJsonDocument documento = QJsonDocument::fromJson(
         archivo.readAll(), &error
         );
@@ -143,6 +172,7 @@ void RegistroPuntajes::cargarPartidas()
         !documento.isArray())
         return;
 
+    // Recorre los datos para recuperar cada partida
     for (const QJsonValue &valor : documento.array()) {
         if (!valor.isObject())
             continue;
@@ -162,13 +192,17 @@ void RegistroPuntajes::cargarPartidas()
     }
 }
 
+// Guarda todas las partidas en un archivo JSON
 void RegistroPuntajes::guardarPartidas() const
 {
     QFileInfo informacion(obtenerRuta());
+
+    // Crea la carpeta de datos si no existe
     QDir().mkpath(informacion.absolutePath());
 
     QJsonArray lista;
 
+    // Convierte cada partida en un objeto JSON
     for (const Partida &partida : partidas) {
         QJsonObject objeto;
 
@@ -187,7 +221,8 @@ void RegistroPuntajes::guardarPartidas() const
     if (!archivo.open(QIODevice::WriteOnly))
         return;
 
+    // Escribe los datos y guarda los cambios
     archivo.write(QJsonDocument(lista).toJson());
+
     archivo.commit();
 }
-
